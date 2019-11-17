@@ -1,63 +1,57 @@
 #include <iostream>
-#include <cstdlib>
-#include <algorithm>
-#include <queue>
+#include <string.h>
 
 using namespace std;
-priority_queue<pair<int,int>> PQ;
 char origin[10];
-int t[10];
-int n,len,mp,temp;
-
-void transfer(){
-    temp=0;
-    for(int i=0;i<len;++i){
-        cout<<atoi((origin))*(10^(len-i-1))<<endl;
-        temp += (origin[i]-'0')*(10);
-    }
-    return temp;
-}
+char mp[10]={0};
+int n,len;
 
 void findanswer(int s,int cn){
-    int a;
-    for(int i=s;i<len;++i){
-        PQ.push({origin[i],i});
-    }
-    while(s == (a=PQ.top().second)){
-        PQ.pop();
-        ++s;
-    }
-    PQ.pop();
-    if(PQ.empty()){
-        swap(origin[a],origin[a-1]);
-    }
-    else{
-        swap(origin[s],origin[a]);
-    }
-    while (!PQ.empty()){
-        PQ.pop();
-    }
-    if(cn != n){
-        findanswer(s+1,cn+1);
-    }
-    else{
+    if(cn > n){
         return;
+    }
+    int a;
+    for(int i=s;i<len-1;++i){
+        for(int j=i+1;j<len;++j){
+            swap(origin[i],origin[j]);
+            if(strncmp(origin,mp,len)>0 && cn == n){
+                strncpy(mp,origin,len);
+            }
+            findanswer(0,cn+1);
+            swap(origin[j],origin[i]);
+        }
     }
 }
 
 int main() {
-    int test;
+    int test,flag;
     cin>>test;
     for(int t=1;t<=test;++t){
+        flag=0;
         cin>>origin>>n;
         len=strlen(origin);
-        transfer();
-        cout<<n;
-        findanswer(0,0);
-        cout<<"#"<<t<<" "<<origin<<"\n";
+        if(n>=len){
+            if(len%2==0 && n%2==0){
+                n=len-1;
+            }
+            if(len%2==0 && n%2!=0){
+                n=len-1;flag=1;
+            }
+            if(len%2!=0 && n%2==0){
+                n=len-1;
+            }
+            if(len%2!=0 && n%2!=0){
+                n=len-1;flag=1;
+            }
+        }
+        for(int i=0;i<10;++i){
+            mp[i]=0;
+        }
+        findanswer(0,1);
+        if(flag==1){
+            swap(mp[len-1],mp[len-2]);
+        }
+        cout<<"#"<<t<<" "<<mp<<"\n";
     }
-
-
-
     return 0;
 }

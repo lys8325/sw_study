@@ -11,6 +11,8 @@ iostream
 -
 cstdlib
 -
+string
+-
 algorithm
 -
 queue
